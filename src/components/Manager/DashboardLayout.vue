@@ -3,7 +3,7 @@
         <v-navigation-drawer v-model="drawer" class="fullheight" width="256" app>
             <v-list-item class="titlePart">
                 <v-list-item-content>
-                    <v-list-item-title class="title">ADMIN</v-list-item-title>
+                    <v-list-item-title class="title">MANAGER</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
 
@@ -42,11 +42,9 @@ export default {
         return {
             drawer: true,
             items: [
-                { title: "Dashboard", to: "/dashboardadm" },
-                { title: 'DataPeg', to: '/datapeg' },
-                { title: 'Driver', to: '/driver' },
-                { title: 'Mobil', to: '/mobil' },
-                { title: 'Mitra', to: '/mitra' },
+                { title: "Dashboard", to: "/dashboardman" },
+                { title: 'Jadwal', to: '/jadwal' },
+                { title: 'Promo', to: '/promo' },
             ],
         };
     },
@@ -89,7 +87,7 @@ export default {
     min-height: 100vh !important;
 }
 .header {
-    background-color: #245399 !important;
+    background-color: #eda60e !important;
     font-family: 'Montserrat', sans-serif;
 }
 .router{
@@ -97,10 +95,10 @@ export default {
     color: black;
 }
 .sidePart {
-    background-color: #245399 !important;
+    background-color: #eda60e !important;
     font-family: 'Montserrat', sans-serif;
 }
 .titlePart {
-    background-color: #245399 !important;
+    background-color: #eda60e !important;
 }
 </style>

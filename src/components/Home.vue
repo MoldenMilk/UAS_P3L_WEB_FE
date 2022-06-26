@@ -2,40 +2,35 @@
 <v-main>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-xxl">
-        <router-link class="navbar-brand" :to="{ name: 'Beranda' }">
-          RESTORAN SEI SAPI
+        <router-link class="navbar-brand" :to="{ name: 'Home' }">
+          Atma Jogja Rental Service
         </router-link>
         <div
           class="collapse navbar-collapse justify-content-end"
         >
           <div class="navbar-nav">
             <a class="nav-link" href="#home">HOME</a>
-            <a class="nav-link" href="#menu">MENU</a>
+            <a class="nav-link" href="#brosur">BROSUR</a>
+            <a class="nav-link" href="#pesan">ORDER</a>
+            <a class="nav-link" href="#promo">PROMO</a>
             <a class="nav-link" href="#about">ABOUT</a>
-            <div v-if="cekLogin()=='guest'">
-              <router-link class="nav-link" :to="{ path: '/login'}">
-                {{txtLogin}}
-              </router-link>
-            </div>
-            <div v-else-if="cekLogin()=='user'">
-              <router-link class="nav-link" :to="{ path: '/profile'}">
-                {{txtLogin}}
-              </router-link>
-            </div>
+            <router-link class="nav-link" :to="{ path: '/login'}">
+              {{txtLogin}}
+            </router-link>
           </div>
         </div>
       </div>
     </nav>
 
     <div class="container-fluid" id="home">
-      <h1 id="taglineText">BEST SEI SAPI IN TOWN</h1>
+      <h1 id="taglineText">!!! ATMA JOGJA RENTAL !!!</h1>
       <div class="row justify-content-center">
-        <img src="../assets/nyapiioutlet.jpg" alt="Gambar Beranda" style="width: 1000px" />
+        <img src="../assets/LogoAjr.png" alt="Gambar Beranda" style="width: 700px" />
       </div>
     </div>
 
-    <div class="container-fluid mt-10 mb-10" style="width: 1000px" id="menu">
-      <h2 id="subJudul">Let's Take A Look<br>To Some Of Our Menu !</h2>
+    <div class="container-fluid mt-10 mb-10" style="width: 1000px" id="brosur">
+      <h2 id="subJudul">Mobil-Mobil Tersedia<br>Harga Untuk Setiap Mobil Berbeda</h2>
       <div class="row justify-content-center mb-5" >
         <v-carousel hide-delimiters>
           <v-carousel-item
@@ -47,13 +42,33 @@
           ></v-carousel-item>
         </v-carousel>
       </div>
-      <div class="row justify-content-center btn" style="width: 1000px">
-            <router-link :to="{ name: 'OrderPesanan' }">
-                <v-btn block color="#ce453d" class="text-white mr-3"> ORDER NOW </v-btn>
-            </router-link>
+      <div class="row justify-content-center btn" style="width: 1000px" id="pesan">
             <router-link :to="{ name: 'TrackOrder' }">
-                <v-btn block color="#ce453d" class="text-white mr-3"> TRACK ORDER </v-btn>
+                <v-btn block color="#245399" class="text-white mr-3"> CEK PESANAN </v-btn>
             </router-link>
+            <router-link :to="{ name: 'OrderMobil' }">
+                <v-btn block color="#245399" class="text-white mr-3"> PESAN MOBIL </v-btn>
+            </router-link>
+      </div>
+    </div>
+
+    <div class="container-fluid" style="width: 1000px" id="promo">
+      <h2 id="subJudul">Promo Berlangsung</h2>
+      <div class="row justify-content-center mb-5">
+        <v-card>
+            <v-card-title>
+                <v-text-field
+                    v-model="search"
+                    append-icon="mdi-magnify"
+                    label="Search"
+                    single-line
+                    hide-details>
+                </v-text-field>
+                <v-spacer></v-spacer>
+            </v-card-title>
+            <v-data-table :headers="headers" :items="Promo" :search="search">
+            </v-data-table>
+        </v-card>
       </div>
     </div>
 
@@ -61,36 +76,36 @@
           <div class="row justify-content-center">
             <div class="row justify-content-center m-2" style="text-align: justify">
               <h2 id="subJudul">
-                About Our Resto :
+                Tentang Atma Jogja Rental :
               </h2>
                 <h4>
                   <p>
-                    Our resto open since world war 2 ends. We only deviler the most
-                    delicious Sapi to our customers.
+                    Sebuah badan usaha yang menyediakan jasa penyewaan kendaraan
+                    mobil yang berada di Kota Yogyakarta.
                   </p>
                 </h4>
                 <h4>
                   <p>
-                    The chef himself is a Sapi Master, so he knows what to do with
-                    the ingredients the flavour always top notch.
+                    Atma Jogja Rental menyediakan mobil dengan 
+                    berbagai merk yang ada di Indonesia.
                   </p>
                 </h4>
                 <h4>
                   <p>
-                    We breed our Sapi by our own farm in secret area where only few
-                    people can enter. We pick and cut the meat right in front of
-                    their friends.
+                    Selain menyewakan mobil, Atma Jogja Rental juga 
+                    menyediakan jasa driver untuk mengantar customer 
+                    selama menyewa mobil di Yogyakarta.
                   </p>
                 </h4>
                 <h4>
                   <p>
-                    And we always open from 8 A.M to 11 P.M every Monday to
-                    Saturday. On Sunday we milk our Sapi.
+                    AJR baru berdiri selama dua tahun yaitu sejak
+                    19 Februari 2019 di Yogyakarta.
                   </p>
                 </h4>
                 <h6>
                   <p>
-                    Email : SapiPerang@gmail.com | Phone : (021) 19181945 | Address
+                    Email : AtmaJogjaRental@gmail.com | Phone : (021) 19181945 | Address
                     : Jl.Merdeka Raya No.45, Kota Rahasia, Indonesia
                   </p>
                 </h6>
@@ -98,15 +113,15 @@
           </div>
         </div>
 
-    <footer class="text-center text-white" style="background-color: #ce453d">
+    <footer class="text-center text-white" style="background-color: #eda60e">
           <!-- Grid container -->
           <div class="container p-4"></div>
           <!-- Grid container -->
 
           <!-- Copyright -->
-          <div class="text-center p-3" style="background-color: #ce453d">
+          <div class="text-center p-3" style="background-color: #eda60e">
             © 2021 Copyright:
-            <a class="text-white" href="#">Restoran Sei Sapi</a>
+            <a class="text-white" href="#">Atma Jogja Rental</a>
           </div>
           <!-- Copyright -->
     </footer>
@@ -116,7 +131,7 @@
 <style scoped>
 
 .navbar {
-  background-color: #ce453d !important;
+  background-color: #eda60e !important;
   height: 80px;
 }
 
@@ -132,7 +147,7 @@
 }
 
 h1 {
-  color: #ce453d;
+  color: #eda60e;
   font-weight: bold;
 }
 
@@ -143,7 +158,7 @@ h1 {
 #taglineText {
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
-  color: #ce453d;
+  color: #eda60e;
   text-align: center;
   margin: 20px;
 }
@@ -151,7 +166,7 @@ h1 {
 #subJudul {
   font-family: 'Montserrat', sans-serif;
   font-weight: 800;
-  color: #ce453d;
+  color: #eda60e;
   text-align: left;
   margin-bottom: 20px;
 }
@@ -162,17 +177,39 @@ h1 {
     name: "Home",
     data () {
       return {
+        Promo: [],
+        search: null,
         txtLogin: "",
         items: [
           {
-            src: 'https://s2.bukalapak.com/bukalapak-kontenz-production/content_attachments/64497/original/sei_sapi_jakarta.jpg',
+            src: 'http://images.summitmedia-digital.com/topgear/images/2021/02/23/toyota-vios-gr-s-ph-arrival-1614062835.jpg',
           },
           {
-            src: 'https://asset.kompas.com/crops/DXz8VuHdCJkniBVJv_YzdB2l6BE=/0x354:1440x1314/750x500/data/photo/2020/07/19/5f13ac00c83fb.jpg',
+            src: 'http://www.carwriteups.co.uk/wp-content/uploads/2012/11/New-Honda-Civic-Front-Three-Quarter-View.jpg',
           },
           {
-            src: 'https://asset.kompas.com/crops/fOa8dPafuFT1nLLaxOr9ZznYJWQ=/0x269:1440x1229/750x500/data/photo/2020/07/19/5f13ac00e9d8e.jpg',
+            src: 'https://s3.amazonaws.com/carmudi-blogs/carmudi-id/wp-content/uploads/2020/03/19165701/Foto-6.jpg',
           },
+          {
+            src: 'https://www.carblogindia.com/wp-content/uploads/2016/10/new-2016-honda-brio-facelift-official-images-colours-urban-titanium.jpg',
+          },
+          {
+            src: 'https://img.cintamobil.com/2019/10/15/KM1pHMws/all-new-toyota-rush-g-2019-4-baa0.jpeg',
+          },
+          {
+            src: 'https://techvorm.com/wp-content/uploads/2021/01/The-new-Fortuner-scaled.jpg',
+          },
+          {
+            src: 'https://images.summitmedia-digital.com/topgear/images/2019/05/14/2019-toyota-avanza-main-temp-1557805092.jpg',
+          },
+          {
+            src: 'https://www.autofreaks.com/wp-content/uploads/2016/04/2016_Toyota_Alphard-5.jpg',
+          },
+        ],
+        headers: [
+          { text: "Kode Promo", align: "start", sortable: true, value: "kodePromo" },
+          { text: "Nama Promo", value: 'namaPromo' },
+          { text: "Keterangan", value: 'keteranganPromo' },
         ],
       }
     },
@@ -182,13 +219,27 @@ h1 {
           this.txtLogin = "LOGIN";
           return 'guest';
         } else if (localStorage.getItem("token")!=null) {
-          this.txtLogin = "Hi, " + localStorage.getItem("nama");
-          return 'user';
+          this.txtLogin = "Hi, " + localStorage.getItem("Nama");
+          return 'customers';
         }
+      },
+      //READ PROMO
+      readData() {
+        var url = this.$api + '/promo';
+        this.$http.get(url, {
+          headers: {
+            'Authorization' : 'Bearer ' + localStorage.getItem('token')
+          }
+        }).then(response => {
+          this.Promo = response.data.data;
+        })
       },
     },
     created() {
       this.cekLogin();
     },
+    mounted() {
+            this.readData();
+        },
   };
 </script>

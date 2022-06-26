@@ -2,8 +2,8 @@
     <v-main>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-xxl"> 
-        <router-link class="navbar-brand" :to="{ name: 'Beranda' }">
-          RESTORAN SEI SAPI
+        <router-link class="navbar-brand" :to="{ name: 'Home' }">
+          Atma Jogja Rental Service
         </router-link>
       </div>
     </nav>
@@ -23,7 +23,7 @@
                 <v-spacer></v-spacer>
             </v-card-title>
             
-            <v-data-table :headers="headers" :items="tempPesanan" :search="search">
+            <v-data-table :headers="headers" :items="tempTransaksi" :search="search">
             </v-data-table>
             </v-card>
         </div>
@@ -35,7 +35,7 @@
 <style scoped>
 
 .navbar {
-  background-color: #ce453d !important;
+  background-color: #eda60e !important;
   height: 80px;
 }
 
@@ -54,43 +54,40 @@
             return {
                 search: null,
                 headers: [
-                    { text: "Nama", align:"start", sortable: true, value: "nama"},
-                    { text: "Nomor Telepon", value: "no_telp"},
-                    { text: "Alamat", value: "alamat"},
-                    { text: "Paket", value: "paket"},
-                    { text: "Harga", value: "harga"},
+                    { text: "Nama", align:"start", sortable: true, value: "Nama"},
+                    { text: "Tanggal Mulai", value: "tgl_mulai"},
+                    { text: "Tanggal Selesai", value: "tgl_selesai"},
+                    { text: "Mobil", value: "mobil"},
                     { text: "Promo", value: "promo"},
+                    { text: "Driver", value: "driver"},
                     { text: "Status", value: "status" },
-                    { text: "Total Harga", value: "totalHarga"},
                 ],
-                pesanan: new Array(),
-                tempPesanan: new Array(),
+                transaksi: new Array(),
+                tempTransaksi: new Array(),
             };
         },
         methods: {
             readData(){
-                var url = this.$api +'/pesanan';
+                var url = this.$api +'/showTransaksi';
                 this.$http.get(url, {
                     headers: {
                         'Authorization' : 'Bearer ' + localStorage.getItem('token')
                     }
                 }).then(response => {
-                    this.pesanan = response.data.data;
-                    this.bacaStatus(this.pesanan);
+                    this.transaksi = response.data.data;
+                    this.bacaStatus(this.transaksi);
                 })
             },
-            bacaStatus(pesanan) {
-                this.tempPesanan = pesanan;
-                for (var i = 0; i < pesanan.length; i++) {
+            bacaStatus(transaksi) {
+                this.tempTransaksi = transaksi;
+                for (var i = 0; i < transaksi.length; i++) {
 
-                    if(pesanan[i].status == 0){
-                        this.tempPesanan[i].status = "Belum Ada Status";
-                    } else if (pesanan[i].status == 1) {
-                        this.tempPesanan[i].status = "Diproses";
-                    } else if (pesanan[i].status == 2) {
-                        this.tempPesanan[i].status = "Diantar";
-                    } else if (pesanan[i].status == 3) {
-                        this.tempPesanan[i].status = "Selesai";
+                    if(transaksi[i].status == 0){
+                        this.tempTransaksi[i].status = "Belum Ada Status";
+                    } else if (transaksi[i].status == 1) {
+                        this.tempTransaksi[i].status = "Belum Verif";
+                    } else if (transaksi[i].status == 2) {
+                        this.tempTransaksi[i].status = "Sudah Verif";
                     }
                 }
             },
@@ -98,7 +95,7 @@
         mounted() {
             if(localStorage.getItem("token")==null){
                 this.$router.push({
-                    name: "Beranda",
+                    name: "Home",
                 });
                 alert("Login Terlebih Dahulu");
             } else {

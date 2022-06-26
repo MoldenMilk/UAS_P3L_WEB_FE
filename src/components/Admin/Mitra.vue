@@ -1,6 +1,6 @@
 <template>
     <v-main>
-        <h3 class="text-h3" font-wight-medium mb-5>Pesanan</h3>
+        <h3 class="text-h3" font-wight-medium mb-5>Data Mitra</h3>
         
         <v-card>
             <v-card-title>
@@ -12,8 +12,9 @@
                     hide-details>
                 </v-text-field>
                 <v-spacer></v-spacer>
+                <v-btn color="success" dark @click="dialog = true"> Tambah </v-btn>
             </v-card-title>
-            <v-data-table :headers="headers" :items="tempPesanan" :search="search">
+            <v-data-table :headers="headers" :items="Mitra" :search="search">
                 <template v-slot:[`item.actions`]="{ item }">
                     <v-btn small class="mr-2" @click="editHandler(item)">edit</v-btn>
                     <v-btn small @click="deleteHandler(item.id)">delete</v-btn>
@@ -21,43 +22,35 @@
             </v-data-table>
         </v-card>
 
-        <v-dialog v-model="dialog" persistent max-width="1000px">
+        <v-dialog v-model="dialog" persistent max-width="800px">
             <v-card style="width: 600px">
                 <v-card-title>
-                    <span class="headline ml-2 mt-2">{{ formtitle }} Pesanan</span>
+                    <span class="headline ml-2 mt-2">{{ formtitle }} Daftar Mitra</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-text-field v-model="form.nama" label="Nama" disabled></v-text-field>
-                        <v-text-field v-model="form.no_telp" label="No Telp" disabled></v-text-field>
-                        <v-text-field v-model="form.alamat" label="Alamat" disabled></v-text-field>
-                        <v-text-field v-model="form.paket" label="Paket" disabled></v-text-field>
-                        <v-text-field v-model="form.harga" label="Harga" disabled></v-text-field>
-                        <v-text-field v-model="form.promo" label="Promo" disabled></v-text-field>
-                        <v-select
-                            v-model="status"
-                            :items="namaStatus"
-                            label="Status"
-                            required
-                            @change="getStatus"
-                        ></v-select>
-                        <!-- <v-text-field v-model="form.status" label="Status" required></v-text-field> -->
+                        <v-text-field v-model="form.Nama" label="Nama" required></v-text-field>
+                        <v-text-field v-model="form.Alamat" label="Alamat" required></v-text-field>
+                        <v-text-field v-model="form.No_Telepon" label="No Telepon" required></v-text-field>
+                        <v-text-field v-model="form.KTP" label="KTP" required></v-text-field>
+                        <v-text-field v-model="form.Kontrak_Mulai" type=date label="Kontrak Mulai" required></v-text-field>
+                        <v-text-field v-model="form.Kontrak_Selesai" type=date label="Kontrak Selesai" required></v-text-field>
                     </v-container>
                 </v-card-text>
                 <v-card-action>
                     <v-spacer></v-spacer>
                     <v-btn class="ml-5 mb-3" color="#ce453d" text @click="cancel">Cancel</v-btn>
-                    <v-btn class="mb-3" color="#ce453d" text @click="update">Save</v-btn>
+                    <v-btn class="mb-3" color="#ce453d" text @click="setForm">Save</v-btn>
                 </v-card-action>
             </v-card>
         </v-dialog>
 
-        <v-dialog v-model="dialogConfirm" persistent max-width="1000px">
+        <v-dialog v-model="dialogConfirm" persistent max-width="400px">
             <v-card style="width: 600px">
                 <v-card-title>
                     <span class="headline">Warning!</span>
                 </v-card-title>
-                <v-card-text>Anda yakin ingin menghapus pesanan ini?</v-card-text>
+                <v-card-text>Anda yakin ingin menghapus mitra ini?</v-card-text>
                 <v-card-action>
                     <v-spacer></v-spacer>
                     <v-btn class="ml-2 mb-3" color="#ce453d" text @click="dialogConfirm = false">Cancel</v-btn>
@@ -83,29 +76,24 @@
                 search: null,
                 dialog: false,
                 dialogConfirm: false,
-                namaStatus: ['Belum Ada Status', 'Diproses', 'Diantar', 'Selesai'],
                 headers: [
-                    { text: "Nama", align: "start", sortable: true, value: "nama" },
-                    { text: "No Telp", value: 'no_telp' },
-                    { text: "Alamat", value: 'alamat' },
-                    { text: "Paket", value: 'paket' },
-                    { text: "Harga", value: 'harga' },
-                    { text: "Promo", value:'promo' },
-                    { text: "Status", value:'status' },
-                    { text: "Actions", value:'actions'},
+                    { text: "Nama", align: "start", sortable: true, value: "Nama" },
+                    { text: "Alamat", value: 'Alamat' },
+                    { text: "No Telepon", value: 'No_Telepon' },
+                    { text: "KTP", value: 'KTP' },
+                    { text: "Kontrak Mulai", value: 'Kontrak_Mulai' },
+                    { text: "Kontrak Selesai", value: 'Kontrak_Selesai' },
+                    { text: "Actions", value:'actions' },
                 ],
-                pesanan: new FormData,
-                Pesanan: new Array(),
-                tempPesanan: new Array(),
-                tempStatus: null,
+                mitra: new FormData,
+                Mitra: [],
                 form: {
-                    name: null,
-                    no_telp: null,
-                    alamat: null,
-                    paket: null,
-                    harga: null,
-                    promo: null,
-                    status: null,
+                    Nama: null,
+                    Alamat: null,
+                    No_Telepon: null,
+                    KTP: null,
+                    Kontrak_Mulai: null,
+                    Kontrak_Selesai: null,
                 },
                 deleteId: '',
                 editId: ''
@@ -122,43 +110,27 @@
             },
             //READ
             readData() {
-                var url = this.$api + '/pesanan';
+                var url = this.$api + '/mitra';
                 this.$http.get(url, {
                     headers: {
                         'Authorization' : 'Bearer ' + localStorage.getItem('token')
                     }
                 }).then(response => {
-                    this.Pesanan = response.data.data;
-                    this.bacaStatus(this.Pesanan);
+                    this.Mitra = response.data.data;
                 })
-            },
-            bacaStatus(pesanan) {
-                this.tempPesanan = pesanan;
-                for (var i = 0; i < pesanan.length; i++) {
-                    if(pesanan[i].status == 0){
-                        this.tempPesanan[i].status = "Belum Ada Status";
-                    } else if (pesanan[i].status == 1) {
-                        this.tempPesanan[i].status = "Diproses";
-                    } else if (pesanan[i].status == 2) {
-                        this.tempPesanan[i].status = "Diantar";
-                    } else if (pesanan[i].status == 3) {
-                        this.tempPesanan[i].status = "Selesai";
-                    }
-                }
             },
             //SIMPAN
             save() {
-                this.pesanan.append('name', this.form.name);
-                this.pesanan.append('no_telp', this.form.no_telp);
-                this.pesanan.append('alamat', this.form.alamat);
-                this.pesanan.append('paket', this.form.paket);
-                this.pesanan.append('harga', this.form.harga);
-                this.pesanan.append('promo', this.form.promo);
-                this.pesanan.append('status', this.form.status);
+                this.mitra.append('Nama', this.form.Nama);
+                this.mitra.append('Alamat', this.form.Alamat);
+                this.mitra.append('No_Telepon', this.form.No_Telepon);
+                this.mitra.append('KTP', this.form.KTP);
+                this.mitra.append('Kontrak_Mulai', this.form.Kontrak_Mulai);
+                this.mitra.append('Kontrak_Selesai', this.form.Kontrak_Selesai);
 
-                var url = this.$api + '/pesanan/'
+                var url = this.$api + '/mitra/'
                 this.load = true;
-                this.$http.post(url, this.pesanan, {
+                this.$http.post(url, this.mitra, {
                     headers: {
                         'Authorization' : 'Bearer ' + localStorage.getItem('token')
                     }
@@ -180,15 +152,14 @@
             //UPDATE
             update() {
                 let newData = {
-                    // name : this.form.name,
-                    // no_telp : this.form.no_telp,
-                    // alamat : this.form.alamat,
-                    // paket : this.form.paket,
-                    // harga : this.form.harga,
-                    // promo : this.form.promo,
-                    status : this.tempStatus,
+                    Nama : this.form.Nama,
+                    Alamat : this.form.Alamat,
+                    No_Telepon : this.form.No_Telepon,
+                    KTP : this.form.KTP,
+                    Kontrak_Mulai : this.form.Kontrak_Mulai,
+                    Kontrak_Selesai : this.form.Kontrak_Selesai,
                 };
-                var url = this.$api + '/pesanan/status/' + this.editId;
+                var url = this.$api + '/mitra/' + this.editId;
                 this.load = true;
                 this.$http.put(url, newData, {
                     headers: {
@@ -210,10 +181,9 @@
                 this.load = false;
             });
             },
-
             //HAPUS
             deleteData() {
-                var url = this.$api + '/pesanan/' + this.deleteId;
+                var url = this.$api + '/mitra/' + this.deleteId;
                 this.load = true;
                 this.$http.delete(url, {
                     headers: {
@@ -238,13 +208,12 @@
             editHandler(item) {
                 this.inputType = 'Ubah';
                 this.editId = item.id;
-                this.form.name = item.name;
-                this.form.no_telp = item.no_telp;
-                this.form.alamat = item.alamat;
-                this.form.paket = item.paket;
-                this.form.harga = item.harga;
-                this.form.promo = item.promo;
-                this.status = item.status;
+                this.Nama = item.Nama,
+                this.Alamat = item.Alamat,
+                this.No_Telepon = item.No_Telepon,
+                this.KTP = item.KTP,
+                this.Kontrak_Mulai = item.Kontrak_Mulai,
+                this.Kontrak_Selesai = item.Kontrak_Selesai,
                 this.dialog = true;
             },
             deleteHandler(id) {
@@ -259,30 +228,19 @@
             },
             cancel() {
                 this.readData();
+                this.resetForm();
                 this.dialog = false;
                 this.dialogConfirm = false;
             },
             resetForm() {
                 this.form = {
-                    name: null,
-                    no_telp: null,
-                    alamat: null,
-                    paket: null,
-                    harga: null,
-                    promo: null,
-                    status: null,
+                    Nama: null,
+                    Alamat: null,
+                    No_Telepon: null,
+                    KTP: null,
+                    Kontrak_Mulai: null,
+                    Kontrak_Selesai: null,
                 };
-            },
-            getStatus(){
-                if(this.status == "Belum Ada Status"){
-                    this.tempStatus = 0;
-                } else if(this.status == "Diproses"){
-                    this.tempStatus = 1;
-                } else if(this.status == "Diantar"){
-                    this.tempStatus = 2;
-                } else if(this.status == "Selesai"){
-                    this.tempStatus = 3;
-                }
             },
         },
         computed: {

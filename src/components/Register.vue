@@ -2,7 +2,9 @@
     <v-main>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-xxl"> 
-            <a class="navbar-brand" href="">RESTORAN SEI SAPI</a>
+            <router-link class="navbar-brand" :to="{ name: 'Home' }">
+            Atma Jogja Rental Service
+        </router-link>
         </div>
     </nav>
 
@@ -14,16 +16,20 @@
           </v-card-title>
           <v-card-text>
             <v-container>
-              <v-text-field v-model="name" label="Nama" :rules="nameRules" required></v-text-field>
-              <v-text-field v-model="no_telp" label="Nomor Telepon" :rules="notelpRules" required></v-text-field>
-              <v-text-field v-model="alamat" label="Alamat" :rules="alamatRules" required></v-text-field>
-              <v-text-field v-model="email" label="E-mail" :rules="emailRules" required></v-text-field>
+              <v-text-field v-model="Nama" label="Nama" :rules="namaRules" required></v-text-field>
               <v-text-field v-model="password" label="Password" :rules="passwordRules" type="password" required></v-text-field>
+              <v-text-field v-model="Alamat" label="Alamat Lengkap" :rules="alamatRules" required></v-text-field>
+              <v-text-field v-model="Tanggal_Lahir" label="Tanggal Lahir" :rules="tanggalRules" type="date" required></v-text-field>
+              <v-text-field v-model="Jenis_Kelamin" label="Jenis Kelamin" :rules="kelaminRules" required></v-text-field>
+              <v-text-field v-model="email" label="E-mail" :rules="emailRules" required></v-text-field>
+              <v-text-field v-model="SIM" label="SIM"></v-text-field>
+              <v-text-field v-model="KTP" label="KTP"></v-text-field>
+              <v-text-field v-model="No_Telepon" label="Nomor Telepon" :rules="notelpRules" required></v-text-field>
             </v-container>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn block color="#ce453d" class="text-white mb-2" @click="submit"> Register </v-btn>
+            <v-btn block color="#eda60e" class="text-white mb-2" @click="submit"> Register </v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -35,7 +41,7 @@
 <style scoped>
 
 .navbar {
-  background-color: #ce453d !important;
+  background-color: #eda60e !important;
   height: 80px;
 }
 
@@ -58,7 +64,7 @@
 
 <script>
 export default {
-  name: "Regsiter",
+  name: "Register",
   data() {
     return {
       load: false,
@@ -66,16 +72,20 @@ export default {
       error_message: "",
       color: "",
       valid: false,
-      name: "",
-      nameRules: [(v) => !!v || "Nama Tidak Boleh Kosong !"],
-      no_telp: "",
-      notelpRules: [(v) => !!v || "No Telp Tidak Boleh Kosong !"],
-      alamat: "",
-      alamatRules: [(v) => !!v || "Alamat Tidak Boleh Kosong !"],
-      email: "",
-      emailRules: [(v) => !!v || "E-mail Tidak Boleh Kosong !"],
+      Nama: "",
+      namaRules: [(v) => !!v || "Nama Tidak Boleh Kosong !"],
       password: "",
       passwordRules: [(v) => !!v || "Password Tidak Boleh Kosong !"],
+      Alamat: "",
+      alamatRules: [(v) => !!v || "Alamat Tidak Boleh Kosong !"],
+      Tanggal_Lahir: "",
+      tanggalRules: [(v) => !!v || "Tanggal Lahir Tidak Boleh Kosong !"],
+      Jenis_Kelamin: "",
+      kelaminlRules: [(v) => !!v || "Jenis Kelamin Tidak Boleh Kosong !"],
+      email: "",
+      emailRules: [(v) => !!v || "E-mail Tidak Boleh Kosong !"],
+      No_Telepon: "",
+      notelpRules: [(v) => !!v || "No Telp Tidak Boleh Kosong !"],
     };
   },
   methods: {
@@ -84,21 +94,24 @@ export default {
         this.load = true;
         this.$http
           .post(this.$api + "/register", {
-            name: this.name,
-            no_telp: this.no_telp,
-            alamat: this.alamat, 
-            email: this.email,
+            Nama: this.Nama,
             password: this.password,
+            Alamat: this.Alamat,
+            Tanggal_Lahir: this.Tanggal_Lahir,
+            Jenis_Kelamin: this.Jenis_Kelamin,
+            email: this.email,
+            SIM: this.SIM,
+            KTP: this.KTP,
+            No_Telepon: this.No_Telepon
           })
           .then((response) => {
             this.error_message = response.data.message;
             this.load = false;
             localStorage.setItem("id", response.data.user.id);
-            localStorage.setItem("token", response.data.access_token);
             this.clear();
             alert("Registrasi Berhasil !");
             this.$router.push({
-              name: "Login",
+              path: "/login",
             });
           })
           .catch((error) => {

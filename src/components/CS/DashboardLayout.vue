@@ -3,7 +3,7 @@
         <v-navigation-drawer v-model="drawer" class="fullheight" width="256" app>
             <v-list-item class="titlePart">
                 <v-list-item-content>
-                    <v-list-item-title class="title">ADMIN</v-list-item-title>
+                    <v-list-item-title class="title">CUSTOMER SERVICE</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
 
@@ -42,11 +42,8 @@ export default {
         return {
             drawer: true,
             items: [
-                { title: "Dashboard", to: "/dashboardadm" },
-                { title: 'DataPeg', to: '/datapeg' },
-                { title: 'Driver', to: '/driver' },
-                { title: 'Mobil', to: '/mobil' },
-                { title: 'Mitra', to: '/mitra' },
+                { title: "Dashboard", to: "/dashboardcs" },
+                { title: 'Data Transaksi', to: '/datatransaksi' },
             ],
         };
     },

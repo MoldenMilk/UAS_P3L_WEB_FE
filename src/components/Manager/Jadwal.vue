@@ -1,6 +1,6 @@
 <template>
     <v-main>
-        <h3 class="text-h3" font-wight-medium mb-5>Users</h3>
+        <h3 class="text-h3" font-wight-medium mb-5>Jadwal Pegawai</h3>
         
         <v-card>
             <v-card-title>
@@ -12,32 +12,32 @@
                     hide-details>
                 </v-text-field>
                 <v-spacer></v-spacer>
+                <v-btn color="success" dark @click="dialog = true"> Tambah </v-btn>
             </v-card-title>
-            <v-data-table :headers="headers" :items="tempUsers" :search="search">
+            <v-data-table :headers="headers" :items="Jadwal" :search="search">
                 <template v-slot:[`item.actions`]="{ item }">
                     <v-btn small class="mr-2" @click="editHandler(item)">edit</v-btn>
                     <v-btn small @click="deleteHandler(item.id)">delete</v-btn>
                 </template>
             </v-data-table>
         </v-card>
-
-        <v-dialog v-model="dialog" persistent max-width="1000px">
+        
+        <v-dialog v-model="dialog" persistent max-width="600px">
             <v-card style="width: 600px">
                 <v-card-title>
-                    <span class="headline ml-2 mt-2">{{ formtitle }} User</span>
+                    <span class="headline ml-2 mt-2">{{ formtitle }} Jadwal Pegawai</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-text-field v-model="form.name" label="Name" required></v-text-field>
-                        <v-text-field v-model="form.no_telp" label="No Telp" required></v-text-field>
-                        <v-text-field v-model="form.alamat" label="Alamat" required></v-text-field>
-                        <v-text-field v-model="form.email" label="Email" disabled></v-text-field>
+                        <v-text-field v-model="form.Nama" label="Nama Pegawai" required></v-text-field>
+                        <v-text-field v-model="form.Shift" label="Shift" required></v-text-field>
+                        <v-text-field v-model="form.Hari" label="Hari" required></v-text-field>
                     </v-container>
                 </v-card-text>
                 <v-card-action>
                     <v-spacer></v-spacer>
                     <v-btn class="ml-5 mb-3" color="#ce453d" text @click="cancel">Cancel</v-btn>
-                    <v-btn class="mb-3" color="#ce453d" text @click="update">Save</v-btn>
+                    <v-btn class="mb-3" color="#ce453d" text @click="setForm">Save</v-btn>
                 </v-card-action>
             </v-card>
         </v-dialog>
@@ -47,7 +47,7 @@
                 <v-card-title>
                     <span class="headline">Warning !</span>
                 </v-card-title>
-                <v-card-text>Anda yakin ingin menghapus user ini ?</v-card-text>
+                <v-card-text>Anda yakin ingin menghapus jadwal ini ?</v-card-text>
                 <v-card-action>
                     <v-spacer></v-spacer>
                     <v-btn class="ml-2 mb-3" color="#ce453d" text @click="dialogConfirm = false">Cancel</v-btn>
@@ -65,6 +65,7 @@
         name: "List",
         data() {
             return {
+                inputType: 'Tambah',
                 load: false,
                 snackbar: false,
                 error_message: '',
@@ -73,55 +74,76 @@
                 dialog: false,
                 dialogConfirm: false,
                 headers: [
-                    { text: "Name", align: "start", sortable: true, value: "name" },
-                    { text: "No Telp", value: 'no_telp' },
-                    { text: "Alamat", value: 'alamat' },
-                    { text: "Email", value: 'email' },
+                    { text: "Nama Pegawai", align: "start", sortable: true, value: "Nama" },
+                    { text: "Shift", value: 'Shift' },
+                    { text: "Hari", value: 'Hari' },
                     { text: "Actions", value:'actions' },
                 ],
-                user: new FormData,
-                users: new Array(),
-                tempUsers: new Array(),
+                jadwal: new FormData,
+                Jadwal: [],
                 form: {
-                    name: null,
-                    no_telp: null,
-                    alamat: null,
-                    email: null,
+                    Nama: null,
+                    Shift: null,
+                    Hari : null,
                 },
                 deleteId: '',
                 editId: ''
             };
         },
-
         methods: {
+            setForm(){
+                if(this.inputType !== 'Tambah'){
+                    this.update();
+                }else{
+                    this.save();
+                }
+            },
             //READ
             readData() {
-                var url = this.$api + '/user';
+                var url = this.$api + '/jadwal';
                 this.$http.get(url, {
                     headers: {
                         'Authorization' : 'Bearer ' + localStorage.getItem('token')
                     }
                 }).then(response => {
-                    this.users = response.data.data;
-                    this.hideAdmin(this.users);
+                    this.Jadwal = response.data.data;
                 })
             },
-            hideAdmin(users){
-                for (var i = 0; i < users.length; i++){
-                    if(users[i].name != 'Admin'){
-                        this.tempUsers.push(users[i]);
+            //SIMPAN
+            save() {
+                this.jadwal.append('Nama', this.form.Nama);
+                this.jadwal.append('Shift', this.form.Shift);
+                this.jadwal.append('Hari', this.form.Hari);
+
+                var url = this.$api + '/jadwal/'
+                this.load = true;
+                this.$http.post(url, this.jadwal, {
+                    headers: {
+                        'Authorization' : 'Bearer ' + localStorage.getItem('token')
                     }
-                }
+            }).then(response => {
+                this.error_message = response.data.message;
+                this.color = "green";
+                this.snackbar = true;
+                this.load = true;
+                this.close();
+                this.readData();
+                this.resetForm();
+            }).catch(error => {
+                this.error_message = error.response.data.message;
+                this.color = "red";
+                this.snackbar = true;
+                this.load = false;
+            });
             },
             //UPDATE
             update() {
                 let newData = {
-                    name : this.form.name,
-                    no_telp : this.form.no_telp,
-                    alamat : this.form.alamat,
-                    email : this.form.email,
+                    Nama : this.form.Nama,
+                    Shift : this.form.Shift,
+                    Hari : this.form.Hari,
                 };
-                var url = this.$api + '/user/' + this.editId;
+                var url = this.$api + '/jadwal/' + this.editId;
                 this.load = true;
                 this.$http.put(url, newData, {
                     headers: {
@@ -132,9 +154,10 @@
                 this.color = "green";
                 this.snackbar = true;
                 this.load = false;
-                alert("User Berhasil Diedit !");
                 this.close();
+                this.readData();
                 this.resetForm();
+                this.inputType = 'Tambah';
             }).catch(error => {
                 this.error_message = error.response.data.message;
                 this.color = "red";
@@ -144,7 +167,7 @@
             },
             //HAPUS
             deleteData() {
-                var url = this.$api + '/user/' + this.deleteId;
+                var url = this.$api + '/jadwal/' + this.deleteId;
                 this.load = true;
                 this.$http.delete(url, {
                     headers: {
@@ -156,9 +179,9 @@
                 this.snackbar = true;
                 this.load = false;
                 this.close();
+                this.readData();
                 this.resetForm();
-                alert("User Berhasil Dihapus !");
-                location.reload();
+                this.inputType = "Tambah";
             }).catch(error => {
                 this.error_message = error.response.data.message;
                 this.color = "red";
@@ -167,11 +190,11 @@
             });
             },
             editHandler(item) {
+                this.inputType = 'Ubah';
                 this.editId = item.id;
-                this.form.name = item.name;
-                this.form.no_telp = item.no_telp;
-                this.form.alamat = item.alamat;
-                this.form.email = item.email;
+                this.form.Nama = item.Nama;
+                this.form.Shift = item.Shift;
+                this.form.Hari = item.Hari;
                 this.dialog = true;
             },
             deleteHandler(id) {
@@ -181,22 +204,20 @@
             close() {
                 this.dialog = false;
                 this.dialogConfirm = false;
-                this.users.length = 0;
-                this.tempUsers.length = 0;
+                this.inputType = 'Tambah';
                 this.readData();
             },
             cancel() {
-                this.users = null;
-                this.tempUsers = null;
                 this.readData();
+                this.resetForm();
                 this.dialog = false;
                 this.dialogConfirm = false;
             },
             resetForm() {
                 this.form = {
-                    name: null,
-                    no_telp: null,
-                    alamat: null,
+                    Nama: null,
+                    Shift: null,
+                    Hari : null,
                 };
             },
         },

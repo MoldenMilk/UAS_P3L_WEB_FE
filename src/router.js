@@ -14,8 +14,8 @@ const router = new VueRouter({
         {
             path: "/",
             component: importComponent("Home"),
-            name: "Beranda",
-            meta: { title: "Beranda" },
+            name: "Home",
+            meta: { title: "Home" },
         },
         {
             path: "/login",
@@ -42,66 +42,121 @@ const router = new VueRouter({
             meta: { title: "EditProfile" },
         },
         {
-            path: "/orderpaket",
-            component: importComponent("OrderPesanan"),
-            name: "OrderPesanan",
-            meta: { title: "OrderPesanan" },
+            path: "/ordermobil",
+            component: importComponent("OrderMobil"),
+            name: "OrderMobil",
+            meta: { title: "OrderMobil" },
         },
         {
-            path: "/trackorder",
+            path: "/trackoder",
             component: importComponent("TrackOrder"),
             name: "TrackOrder",
             meta: { title: "TrackOrder" },
         },
         {
-            path: "/dashboard",
+            path: "/cs",
+            name: "CS",
+            meta: { title: "CS" },
+            component: importComponent("CS/DashboardLayout"),
+            children: [
+                //Dashboard
+                {
+                    path: "/dashboardcs",
+                    name: "CS | Dashboard",
+                    meta: { title: "Dashboardcs" },
+                    component: importComponent("CS/Dashboardcs"),
+                },
+
+                {
+                    path: "/datatransaksi",
+                    name: "CS | Data Transaksi",
+                    meta: { title: "Data Transaksi" },
+                    component: importComponent("CS/DataTransaksi"),
+                },
+
+            ],
+        },
+        {
+            path: "/manager",
+            name: "Manager",
+            meta: { title: "Manager" },
+            component: importComponent("Manager/DashboardLayout"),
+            children: [
+                //Dashboard
+                {
+                    path: "/dashboardman",
+                    name: "Manager | Dashboard",
+                    meta: { title: "Dashboardman" },
+                    component: importComponent("Manager/Dashboardman"),
+                },
+
+                {
+                    path: "/jadwal",
+                    name: "Manager | Jadwal",
+                    meta: { title: "Jadwal" },
+                    component: importComponent("Manager/Jadwal"),
+                },
+
+                {
+                    path: "/promo",
+                    name: "Manager | Promo",
+                    meta: { title: "Promo" },
+                    component: importComponent("Manager/Promo"),
+                },
+
+            ],
+        },
+        {
+            path: "/admin",
             name: "Admin",
             meta: { title: "Admin" },
             component: importComponent("Admin/DashboardLayout"),
             children: [
                 //Dashboard
                 {
-                    path: "/dashboard",
+                    path: "/dashboardadm",
                     name: "Admin | Dashboard",
                     meta: { title: "Dashboard" },
-                    component: importComponent("Admin/Dashboard"),
+                    component: importComponent("Admin/Dashboardadm"),
                 },
 
                 {
-                    path: "/user",
-                    name: "Admin | User",
-                    meta: { title: "User" },
-                    component: importComponent("Admin/User"),
+                    path: "/datapeg",
+                    name: "Admin | DataPeg",
+                    meta: { title: "DataPeg" },
+                    component: importComponent("Admin/DataPeg"),
                 },
 
                 {
-                    path: "/pesanan",
-                    name: "Admin | Pesanan",
-                    meta: { title: "Pesanan" },
-                    component: importComponent("Admin/Pesanan"),
+                    path: "/mobil",
+                    name: "Admin | Mobil",
+                    meta: { title: "Mobil" },
+                    component: importComponent("Admin/Mobil"),
                 },
 
                 {
-                    path: "/promo",
-                    name: "Admin | Promo",
-                    meta: { title: "Promo" },
-                    component: importComponent("Admin/Promo"),
+                    path: "/driver",
+                    name: "Admin | Driver",
+                    meta: { title: "Driver" },
+                    component: importComponent("Admin/Driver"),
                 },
 
+                
                 {
-                    path: "/paket",
-                    name: "Admin | PaketMakan",
-                    meta: { title: "Paket" },
-                    component: importComponent("Admin/PaketMakan"),
+                    path: "/mitra",
+                    name: "Admin | Mitra",
+                    meta: { title: "Mitra" },
+                    component: importComponent("Admin/Mitra"),
                 },
             ],
         },
-        {
-            path: "/cek/:email/:password/:date",
-            component: importComponent("CekEmail"),
-            name: "CekEmail",
-            meta: { title: "CekEmail" },
-        },
+        
+        // {
+        //     path: "/cek/:email/:password/:date",
+        //     component: importComponent("CekEmail"),
+        //     name: "CekEmail",
+        //     meta: { title: "CekEmail" },
+        // },
         {
             path: "*",
             name: "Not Found",

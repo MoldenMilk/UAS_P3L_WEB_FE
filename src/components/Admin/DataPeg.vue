@@ -1,6 +1,6 @@
 <template>
     <v-main>
-        <h3 class="text-h3" font-wight-medium mb-5>Promo</h3>
+        <h3 class="text-h3" font-wight-medium mb-5>Data Pegawai</h3>
         
         <v-card>
             <v-card-title>
@@ -14,7 +14,7 @@
                 <v-spacer></v-spacer>
                 <v-btn color="success" dark @click="dialog = true"> Tambah </v-btn>
             </v-card-title>
-            <v-data-table :headers="headers" :items="Promo" :search="search">
+            <v-data-table :headers="headers" :items="Pegawai" :search="search">
                 <template v-slot:[`item.actions`]="{ item }">
                     <v-btn small class="mr-2" @click="editHandler(item)">edit</v-btn>
                     <v-btn small @click="deleteHandler(item.id)">delete</v-btn>
@@ -22,15 +22,21 @@
             </v-data-table>
         </v-card>
 
-        <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-dialog v-model="dialog" persistent max-width="800px">
             <v-card style="width: 600px">
                 <v-card-title>
-                    <span class="headline ml-2 mt-2">{{ formtitle }} Promo</span>
+                    <span class="headline ml-2 mt-2">{{ formtitle }} Daftar Pegawai</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <v-text-field v-model="form.namaPromo" label="Nama Promo" required></v-text-field>
-                        <v-text-field v-model="form.totalDiskon" label="Total Diskon" required></v-text-field>
+                        <v-text-field v-model="form.Nama" label="Nama" required></v-text-field>
+                        <v-text-field v-model="form.Email" label="Email" required></v-text-field>
+                        <v-text-field v-model="form.Password" type=password label="Password" required></v-text-field>
+                        <v-text-field v-model="form.Tanggal_Lahir" type=date label="Tanggal Lahir" required></v-text-field>
+                        <v-text-field v-model="form.Alamat" label="Alamat" required></v-text-field>
+                        <v-text-field v-model="form.Jenis_Kelamin" label="Jenis Kelamin" required></v-text-field>
+                        <v-text-field v-model="form.No_Telepon" label="No Telepon" required></v-text-field>
+                        <v-text-field v-model="form.Jabatan" label="Jabatan" required></v-text-field>
                     </v-container>
                 </v-card-text>
                 <v-card-action>
@@ -46,7 +52,7 @@
                 <v-card-title>
                     <span class="headline">Warning!</span>
                 </v-card-title>
-                <v-card-text>Anda yakin ingin menghapus promo ini?</v-card-text>
+                <v-card-text>Anda yakin ingin menghapus pegawai ini?</v-card-text>
                 <v-card-action>
                     <v-spacer></v-spacer>
                     <v-btn class="ml-2 mb-3" color="#ce453d" text @click="dialogConfirm = false">Cancel</v-btn>
@@ -73,15 +79,27 @@
                 dialog: false,
                 dialogConfirm: false,
                 headers: [
-                    { text: "Nama Promo", align: "start", sortable: true, value: "namaPromo" },
-                    { text: "Total Diskon", value: 'totalDiskon' },
+                    { text: "Nama", align: "start", sortable: true, value: "Nama" },
+                    { text: "Email", value: 'Email' },
+                    // { text: "Password", value: 'Password' },
+                    { text: "Tanggal Lahir", value: 'Tanggal_Lahir' },
+                    { text: "Alamat", value: 'Alamat' },
+                    { text: "Jenis Kelamin", value: 'Jenis_Kelamin' },
+                    { text: "No Telepon", value: 'No_Telepon' },
+                    { text: "Jabatan", value: 'Jabatan' },
                     { text: "Actions", value:'actions' },
                 ],
-                promo: new FormData,
-                Promo: [],
+                pegawai: new FormData,
+                Pegawai: [],
                 form: {
-                    namaPromo: null,
-                    totalDiskon: null,
+                    Nama: null,
+                    Email: null,
+                    Password: null,
+                    Tanggal_Lahir: null,
+                    Alamat: null,
+                    Jenis_Kelamin: null,
+                    No_Telepon: null,
+                    Jabatan: null,
                 },
                 deleteId: '',
                 editId: ''
@@ -98,23 +116,29 @@
             },
             //READ
             readData() {
-                var url = this.$api + '/promo';
+                var url = this.$api + '/pegawai';
                 this.$http.get(url, {
                     headers: {
                         'Authorization' : 'Bearer ' + localStorage.getItem('token')
                     }
                 }).then(response => {
-                    this.Promo = response.data.data;
+                    this.Pegawai = response.data.data;
                 })
             },
             //SIMPAN
             save() {
-                this.promo.append('namaPromo', this.form.namaPromo);
-                this.promo.append('totalDiskon', this.form.totalDiskon);
+                this.pegawai.append('Nama', this.form.Nama);
+                this.pegawai.append('Email', this.form.Email);
+                this.pegawai.append('Password', this.form.Password);
+                this.pegawai.append('Tanggal_Lahir', this.form.Tanggal_Lahir);
+                this.pegawai.append('Alamat', this.form.Alamat);
+                this.pegawai.append('Jenis_Kelamin', this.form.Jenis_Kelamin);
+                this.pegawai.append('No_Telepon', this.form.No_Telepon);
+                this.pegawai.append('Jabatan', this.form.Jabatan);
 
-                var url = this.$api + '/promo/'
+                var url = this.$api + '/pegawai/'
                 this.load = true;
-                this.$http.post(url, this.promo, {
+                this.$http.post(url, this.pegawai, {
                     headers: {
                         'Authorization' : 'Bearer ' + localStorage.getItem('token')
                     }
@@ -136,10 +160,16 @@
             //UPDATE
             update() {
                 let newData = {
-                    namaPromo : this.form.namaPromo,
-                    totalDiskon : this.form.totalDiskon,
+                    Nama : this.form.Nama,
+                    Email : this.form.Email,
+                    Password : this.form.Password,
+                    Tanggal_Lahir : this.form.Tanggal_Lahir,
+                    Alamat : this.form.Alamat,
+                    Jenis_Kelamin : this.form.Jenis_Kelamin,
+                    No_Telepon : this.form.No_Telepon,
+                    Jabatan : this.form.Jabatan,
                 };
-                var url = this.$api + '/promo/' + this.editId;
+                var url = this.$api + '/pegawai/' + this.editId;
                 this.load = true;
                 this.$http.put(url, newData, {
                     headers: {
@@ -163,7 +193,7 @@
             },
             //HAPUS
             deleteData() {
-                var url = this.$api + '/promo/' + this.deleteId;
+                var url = this.$api + '/pegawai/' + this.deleteId;
                 this.load = true;
                 this.$http.delete(url, {
                     headers: {
@@ -188,8 +218,14 @@
             editHandler(item) {
                 this.inputType = 'Ubah';
                 this.editId = item.id;
-                this.form.namaPromo = item.namaPromo;
-                this.form.totalDiskon = item.totalDiskon;
+                this.Nama = item.Nama,
+                this.Email = item.Email,
+                this.Password = item.Password,
+                this.Tanggal_Lahir = item.Tanggal_Lahir,
+                this.Alamat = item.Alamat,
+                this.Jenis_Kelamin = item.Jenis_Kelamin,
+                this.No_Telepon = item.No_Telepon,
+                this.Jabatan = item.Jabatan,
                 this.dialog = true;
             },
             deleteHandler(id) {
@@ -210,8 +246,14 @@
             },
             resetForm() {
                 this.form = {
-                    namaPromo: null,
-                    totalDiskon: null,
+                    Nama: null,
+                    Email: null,
+                    Password: null,
+                    Tanggal_Lahir: null,
+                    Alamat: null,
+                    Jenis_Kelamin: null,
+                    No_Telepon: null,
+                    Jabatan: null,
                 };
             },
         },
